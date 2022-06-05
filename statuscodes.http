@@ -1,0 +1,54 @@
+@host = http://localhost:8080/api
+
+# 200 -> 299 STATUS CODES
+
+### 200 - OK: Buscar pessoa por id
+GET {{host}}/pessoa/1
+
+### 200 - OK: Buscar pessoa por nome
+GET {{host}}/pessoa?nome=Emanuel
+
+### 201 - CREATED: Criar pessoa
+POST {{host}}/pessoa
+Content-Type: application/json
+
+{
+    "id": 999,
+    "nome": "Fulano"
+}
+
+### 200 - OK: Status do servidor
+GET {{host}}/status
+
+### 204 - NO CONTENT: Deletar pessoa por id
+DELETE {{host}}/pessoa/1
+
+
+# 300 -> 399 STATUS CODES
+
+### 301 - PERMANENTLY MOVED: Tenta buscar pessoa usando URL antiga
+GET {{host}}/pessoa/id/1
+
+### 304 - NOT MODIFIED: Verificar se usuário ainda existe
+GET {{host}}/pessoa/1/existe
+
+
+# 400 -> 499 STATUS CODES
+
+### 404 - NOT FOUND: nome inexistente
+GET {{host}}/pessoa?nome=asdad
+
+### 404 - NOT FOUND: id inexistente
+GET {{host}}/pessoa/999
+
+### 404 - NOT FOUND: path inexistente
+GET {{host}}/carro
+
+
+# 500 -> 599 STATUS CODES
+
+### 500 - INTERNAL SERVER ERROR
+
+
+### 501 - NOT IMPLEMENTED: Tenta acessar recurso ainda não pronto
+GET {{host}}/pessoa/1/idade
