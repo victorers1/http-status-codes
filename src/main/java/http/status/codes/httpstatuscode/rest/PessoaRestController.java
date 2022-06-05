@@ -1,6 +1,11 @@
 package http.status.codes.httpstatuscode.rest;
 
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +58,36 @@ public class PessoaRestController {
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deletePessoa(@PathVariable("id") Long id) throws IllegalArgumentException {
         pessoaService.deletePessoa(id);
+    }
+
+    @GetMapping("/nome/{nome}")
+    @ResponseStatus(code = HttpStatus.MOVED_PERMANENTLY)
+    public String getPessoaByNomeOld(@PathVariable String nome) {
+        // Não redireciona
+        return "Endpoint correto é 'http://localhost:8080/api/pessoa?nome=" + nome + "'";
+    }
+
+    @GetMapping("/id/{id}")
+    @ResponseStatus(code = HttpStatus.MOVED_PERMANENTLY)
+    public String getPessoaByIdOld(HttpServletResponse response, @PathVariable("id") Long id) {
+        // Automaticamente redireciona usuário para link especificado
+        response.addHeader("Location", "http://localhost:8080/api/pessoa/" + id);
+        return "Endpoint correto é '/pessoa/" + id + "'";
+    }
+
+    @GetMapping("/{id}/existente")
+    public ResponseEntity<PessoaDTO> getPessoaIfModified(@PathVariable("id") Long id) {
+        Optional<PessoaDTO> pessoaDTO = pessoaService.getPessoaSeExiste(id);
+        if (pessoaDTO.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(null);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @GetMapping("/{id}/cpf")
+    public String getPessoaCPF(@PathVariable("id") Long id) {
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não tem permissão para acessar isso");
     }
 
     @GetMapping("/{id}/idade")

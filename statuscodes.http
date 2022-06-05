@@ -1,14 +1,14 @@
 @host = http://localhost:8080/api
 
-# 200 -> 299 STATUS CODES
+# 2XX CLASS
 
-### 200 - OK: Buscar pessoa por id
+### 200 - OK: Busca pessoa por id
 GET {{host}}/pessoa/1
 
-### 200 - OK: Buscar pessoa por nome
+### 200 - OK: Busca pessoa por nome
 GET {{host}}/pessoa?nome=Emanuel
 
-### 201 - CREATED: Criar pessoa
+### 201 - CREATED: Cria pessoa
 POST {{host}}/pessoa
 Content-Type: application/json
 
@@ -20,20 +20,29 @@ Content-Type: application/json
 ### 200 - OK: Status do servidor
 GET {{host}}/status
 
-### 204 - NO CONTENT: Deletar pessoa por id
-DELETE {{host}}/pessoa/1
+### 204 - NO CONTENT: Deleta pessoa por id
+DELETE {{host}}/pessoa/4
 
 
-# 300 -> 399 STATUS CODES
+# 3XX CLASS
 
-### 301 - PERMANENTLY MOVED: Tenta buscar pessoa usando URL antiga
+### 301 - PERMANENTLY MOVED: Tenta buscar pessoa por nome usando URL antiga
+GET {{host}}/pessoa/nome/Fulano
+
+### 301 - PERMANENTLY MOVED: Tenta buscar pessoa por id usando URL antiga, mas spring redireciona para endpoint novo e retorna resposta correta (ver código)
 GET {{host}}/pessoa/id/1
 
 ### 304 - NOT MODIFIED: Verificar se usuário ainda existe
-GET {{host}}/pessoa/1/existe
+GET {{host}}/pessoa/1/existente
 
 
-# 400 -> 499 STATUS CODES
+# 4XX CLASS
+
+### 400 - BAD REQUEST: Tenta buscar pessoa passando String no lugar do id
+GET {{host}}/pessoa/a
+
+### 403 - FORBIDDEN: Tenta acessar recurso (fictício) que você não tem permissão
+GET {{host}}/pessoa/1/cpf
 
 ### 404 - NOT FOUND: nome inexistente
 GET {{host}}/pessoa?nome=asdad
@@ -44,11 +53,23 @@ GET {{host}}/pessoa/999
 ### 404 - NOT FOUND: path inexistente
 GET {{host}}/carro
 
+### 405 - METHOD NOT ALLOWED: Usa método HTTP errado na requisição
+POST {{host}}/pessoa/1
 
-# 500 -> 599 STATUS CODES
+### 409 - CONFLICT: Tenta criar pessoa já existente
+POST {{host}}/pessoa
+Content-Type: application/json
 
-### 500 - INTERNAL SERVER ERROR
+{
+    "id": 999,
+    "nome": "Victor"
+}
 
+
+# 5XX CLASS
+
+### 500 - INTERNAL SERVER ERROR: Tenta deletar usuário que não existe
+DELETE {{host}}/pessoa/999
 
 ### 501 - NOT IMPLEMENTED: Tenta acessar recurso ainda não pronto
 GET {{host}}/pessoa/1/idade

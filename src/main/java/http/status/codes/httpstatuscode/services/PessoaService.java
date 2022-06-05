@@ -63,6 +63,18 @@ public class PessoaService {
         return pessoaDTO;
     }
 
+    public Optional<PessoaDTO> getPessoaSeExiste(Long id) {
+        Optional<Pessoa> pessoa = pessoaRepository.findById(id);
+
+        if (pessoa.isPresent()) {
+            Pessoa p = pessoa.get();
+            PessoaDTO pDTO = new PessoaDTO(p);
+            return Optional.of(pDTO);
+        }
+
+        return Optional.empty();
+    }
+
     public void deletePessoa(Long id) throws IllegalArgumentException {
         if (id == null) {
             throw new IllegalArgumentException();

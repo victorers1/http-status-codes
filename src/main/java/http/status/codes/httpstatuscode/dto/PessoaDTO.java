@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PessoaDTO {
     final Long id;
-    final String nome; // TODO: adicionar validação
+    final String nome;
 
     public PessoaDTO(Pessoa pessoa) {
         this.id = pessoa.getId();
